@@ -71,6 +71,7 @@ docker run -d \
 
 | Tag | Moodle | IOMAD | PHP | Status |
 |-----|--------|-------|-----|--------|
+| `5.0-php8.4` | 5.0 | IOMAD 5.0 | **8.4** | 🆕 Cutting edge |
 | `5.0` | 5.0 | IOMAD 5.0 | 8.3 | 🆕 Latest |
 | `4.5`, `latest` | 4.5 LTS | IOMAD 4.5 | 8.3 | ⭐ **Recommended** |
 | `4.4` | 4.4 | IOMAD 4.4 | 8.3 | ✅ Supported |

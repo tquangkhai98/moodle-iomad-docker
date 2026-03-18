@@ -36,9 +36,10 @@ jobs:
         run: |
           # Full version matrix
           ALL_VERSIONS='[
-            {"moodle":"5.0","moodle_code":"500","iomad_branch":"IOMAD_500_STABLE","php":"8.3","latest":false},
-            {"moodle":"4.5","moodle_code":"405","iomad_branch":"IOMAD_405_STABLE","php":"8.3","latest":true},
-            {"moodle":"4.4","moodle_code":"404","iomad_branch":"IOMAD_404_STABLE","php":"8.3","latest":false}
+            {"moodle":"5.0","moodle_code":"500","iomad_branch":"IOMAD_500_STABLE","php":"8.4","php_suffix":"-php8.4","latest":false},
+            {"moodle":"5.0","moodle_code":"500","iomad_branch":"IOMAD_500_STABLE","php":"8.3","php_suffix":"","latest":false},
+            {"moodle":"4.5","moodle_code":"405","iomad_branch":"IOMAD_405_STABLE","php":"8.3","php_suffix":"","latest":true},
+            {"moodle":"4.4","moodle_code":"404","iomad_branch":"IOMAD_404_STABLE","php":"8.3","php_suffix":"","latest":false}
           ]'
 
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
@@ -100,9 +101,10 @@ jobs:
         run: |
           DOCKERHUB="${{ env.DOCKER_HUB_USER }}/${{ env.IMAGE_NAME }}"
           GHCR="ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}"
+          SUFFIX="${{ matrix.php_suffix }}"
 
-          TAGS="${DOCKERHUB}:${{ matrix.moodle }}"
-          TAGS="${TAGS},${GHCR}:${{ matrix.moodle }}"
+          TAGS="${DOCKERHUB}:${{ matrix.moodle }}${SUFFIX}"
+          TAGS="${TAGS},${GHCR}:${{ matrix.moodle }}${SUFFIX}"
 
           # Add :latest tag only for the designated latest version
           if [ "${{ matrix.latest }}" = "true" ]; then
@@ -112,7 +114,7 @@ jobs:
           # Add version tag from git tag (e.g., v4.5.1 → 4.5.1)
           if [ "${{ github.event_name }}" = "push" ] && [[ "${{ github.ref }}" == refs/tags/v* ]]; then
             TAG_VERSION="${GITHUB_REF_NAME#v}"
-            TAGS="${TAGS},${DOCKERHUB}:${TAG_VERSION},${GHCR}:${TAG_VERSION}"
+            TAGS="${TAGS},${DOCKERHUB}:${TAG_VERSION}${SUFFIX},${GHCR}:${TAG_VERSION}${SUFFIX}"
           fi
 
           echo "tags=$TAGS" >> $GITHUB_OUTPUT
@@ -129,8 +131,8 @@ jobs:
             MOODLE_VERSION=${{ matrix.moodle_code }}
             IOMAD_BRANCH=${{ matrix.iomad_branch }}
             PHP_VERSION=${{ matrix.php }}
-          cache-from: type=gha,scope=moodle-${{ matrix.moodle }}
-          cache-to: type=gha,scope=moodle-${{ matrix.moodle }},mode=max
+          cache-from: type=gha,scope=moodle-${{ matrix.moodle }}-php${{ matrix.php }}
+          cache-to: type=gha,scope=moodle-${{ matrix.moodle }}-php${{ matrix.php }},mode=max
           labels: |
             org.opencontainers.image.title=Moodle ${{ matrix.moodle }} + IOMAD
             org.opencontainers.image.description=Moodle ${{ matrix.moodle }} with IOMAD multi-tenancy plugin
