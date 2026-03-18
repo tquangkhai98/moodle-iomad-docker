@@ -1,0 +1,57 @@
+name: Create GitHub Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extract version info
+        id: version
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+          # Determine if pre-release
+          if [[ "$VERSION" == *"-"* ]]; then
+            echo "prerelease=true" >> $GITHUB_OUTPUT
+          else
+            echo "prerelease=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "Moodle + IOMAD v${{ steps.version.outputs.version }}"
+          generate_release_notes: true
+          prerelease: ${{ steps.version.outputs.prerelease }}
+          body: |
+            ## 🐳 Docker Images
+
+            ### Available Versions
+            | Moodle | Docker Hub | GitHub Packages |
+            |--------|-----------|-----------------|
+            | 5.0 | `docker pull tquangkhai98/moodle-iomad:5.0` | `docker pull ghcr.io/tquangkhai98/moodle-iomad:5.0` |
+            | **4.5 LTS** | `docker pull tquangkhai98/moodle-iomad:4.5` | `docker pull ghcr.io/tquangkhai98/moodle-iomad:4.5` |
+            | 4.4 | `docker pull tquangkhai98/moodle-iomad:4.4` | `docker pull ghcr.io/tquangkhai98/moodle-iomad:4.4` |
+
+            ### Quick Start
+            ```bash
+            docker pull tquangkhai98/moodle-iomad:4.5
+            docker run -d -p 8080:80 tquangkhai98/moodle-iomad:4.5
+            ```
+
+            ### Platforms
+            - `linux/amd64` — Standard servers, cloud VMs
+            - `linux/arm64` — Apple Silicon, AWS Graviton, Raspberry Pi

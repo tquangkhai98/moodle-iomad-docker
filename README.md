@@ -2,15 +2,21 @@
 
 [![Docker Hub](https://img.shields.io/docker/pulls/tquangkhai98/moodle-iomad)](https://hub.docker.com/r/tquangkhai98/moodle-iomad)
 [![Docker Image Size](https://img.shields.io/docker/image-size/tquangkhai98/moodle-iomad/latest)](https://hub.docker.com/r/tquangkhai98/moodle-iomad)
+[![GHCR](https://img.shields.io/badge/ghcr.io-moodle--iomad-blue?logo=github)](https://github.com/tquangkhai98/moodle-iomad-docker/pkgs/container/moodle-iomad)
+[![Build](https://github.com/tquangkhai98/moodle-iomad-docker/actions/workflows/build-push.yml/badge.svg)](https://github.com/tquangkhai98/moodle-iomad-docker/actions/workflows/build-push.yml)
 
-Pre-built Docker image with **Moodle 4.5 LTS** and **IOMAD 4.5** multi-tenancy plugin installed and ready to use.
+Pre-built Docker images with **Moodle** and **IOMAD** multi-tenancy plugin installed and ready to use.
 
 > **IOMAD** (Industry's Moodle) adds multi-tenancy to Moodle, enabling you to manage multiple organizations/companies from a single Moodle installation.
 
 ## Quick Start
 
 ```bash
+# Docker Hub
 docker pull tquangkhai98/moodle-iomad:4.5
+
+# GitHub Packages (alternative)
+docker pull ghcr.io/tquangkhai98/moodle-iomad:4.5
 ```
 
 ### Docker Compose (Recommended)
@@ -75,12 +81,17 @@ docker run -d \
 - `theme/iomad` — IOMAD-compatible theme
 - And more (all standard IOMAD plugins)
 
-## Tags
+## Available Versions
 
-| Tag | Description |
-|-----|-------------|
-| `4.5`, `latest` | Moodle 4.5 LTS + IOMAD 4.5 |
-| `4.5.x` | Specific patch versions |
+| Tag | Moodle | IOMAD | PHP | Status |
+|-----|--------|-------|-----|--------|
+| `5.0` | 5.0 | IOMAD 5.0 | 8.3 | Latest |
+| `4.5`, `latest` | 4.5 LTS | IOMAD 4.5 | 8.3 | ⭐ Recommended |
+| `4.4` | 4.4 | IOMAD 4.4 | 8.3 | Supported |
+
+Images are available on both registries:
+- **Docker Hub:** `tquangkhai98/moodle-iomad:<tag>`
+- **GitHub Packages:** `ghcr.io/tquangkhai98/moodle-iomad:<tag>`
 
 ## Platforms
 
