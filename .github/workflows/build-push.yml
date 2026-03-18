@@ -15,7 +15,7 @@ on:
       iomad_branch:
         description: 'IOMAD branch name'
         required: true
-        default: 'IOMAD_45_STABLE'
+        default: 'IOMAD_405_STABLE'
 
   # Auto-trigger on version tags
   push:
@@ -48,7 +48,7 @@ jobs:
             # Extract from tag: v4.5 -> 4.5, v4.5.1 -> 4.5.1
             VERSION="${GITHUB_REF_NAME#v}"
             MOODLE_VERSION="405"
-            IOMAD_BRANCH="IOMAD_45_STABLE"
+            IOMAD_BRANCH="IOMAD_405_STABLE"
           fi
           MAJOR_MINOR=$(echo "$VERSION" | grep -oE '^[0-9]+\.[0-9]+')
           echo "version=$VERSION" >> $GITHUB_OUTPUT

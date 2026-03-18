@@ -100,7 +100,7 @@ docker build -t moodle-iomad:4.5 .
 # Build with custom versions
 docker build \
   --build-arg MOODLE_VERSION=405 \
-  --build-arg IOMAD_BRANCH=IOMAD_45_STABLE \
+  --build-arg IOMAD_BRANCH=IOMAD_405_STABLE \
   --build-arg PHP_VERSION=8.3 \
   -t moodle-iomad:4.5 .
 ```
@@ -110,7 +110,7 @@ docker build \
 | Argument | Default | Description |
 |----------|---------|-------------|
 | `MOODLE_VERSION` | `405` | Moodle stable branch number |
-| `IOMAD_BRANCH` | `IOMAD_45_STABLE` | IOMAD GitHub branch |
+| `IOMAD_BRANCH` | `IOMAD_405_STABLE` | IOMAD GitHub branch |
 | `PHP_VERSION` | `8.3` | PHP version for base image |
 
 ### Push to Docker Hub

@@ -18,7 +18,7 @@
 # Build Arguments
 # ===================================================
 ARG MOODLE_VERSION=405
-ARG IOMAD_BRANCH=IOMAD_45_STABLE
+ARG IOMAD_BRANCH=IOMAD_405_STABLE
 ARG PHP_VERSION=8.3
 
 # ===================================================
