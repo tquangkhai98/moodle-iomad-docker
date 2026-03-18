@@ -221,6 +221,12 @@ CMD ["apache2-foreground"]
 This Docker image packages [Moodle](https://moodle.org/) (GPL-3.0) and [IOMAD](https://www.iomad.org/) (GPL-3.0).
 This project is licensed under [GPL-3.0](LICENSE).
 
+## 🌍 Used In Production
+
+- [**Alpha NDT LMS**](https://lms.alpha-ndt.com/) — Learning Management System for NDT (Non-Destructive Testing) training and certification
+
+---
+
 ## 🙏 Credits
 
 - [Moodle HQ](https://moodle.org/) — Moodle LMS
