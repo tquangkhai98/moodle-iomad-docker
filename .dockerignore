@@ -1,0 +1,7 @@
+.git
+.github
+.gitignore
+*.md
+LICENSE
+scripts/
+.DS_Store

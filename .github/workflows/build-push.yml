@@ -1,0 +1,107 @@
+name: Build and Push Docker Image
+
+on:
+  # Manual trigger with version input
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Image version tag (e.g., 4.5, 4.5.1)'
+        required: true
+        default: '4.5'
+      moodle_version:
+        description: 'Moodle stable version number (e.g., 405)'
+        required: true
+        default: '405'
+      iomad_branch:
+        description: 'IOMAD branch name'
+        required: true
+        default: 'IOMAD_45_STABLE'
+
+  # Auto-trigger on version tags
+  push:
+    tags:
+      - 'v*'
+
+env:
+  DOCKER_HUB_USER: tquangkhai98
+  IMAGE_NAME: moodle-iomad
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Extract version from tag or input
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            VERSION="${{ github.event.inputs.version }}"
+            MOODLE_VERSION="${{ github.event.inputs.moodle_version }}"
+            IOMAD_BRANCH="${{ github.event.inputs.iomad_branch }}"
+          else
+            # Extract from tag: v4.5 -> 4.5, v4.5.1 -> 4.5.1
+            VERSION="${GITHUB_REF_NAME#v}"
+            MOODLE_VERSION="405"
+            IOMAD_BRANCH="IOMAD_45_STABLE"
+          fi
+          MAJOR_MINOR=$(echo "$VERSION" | grep -oE '^[0-9]+\.[0-9]+')
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "major_minor=$MAJOR_MINOR" >> $GITHUB_OUTPUT
+          echo "moodle_version=$MOODLE_VERSION" >> $GITHUB_OUTPUT
+          echo "iomad_branch=$IOMAD_BRANCH" >> $GITHUB_OUTPUT
+
+      - name: Set up QEMU (for multi-platform)
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ env.DOCKER_HUB_USER }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and Push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            ${{ env.DOCKER_HUB_USER }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.version }}
+            ${{ env.DOCKER_HUB_USER }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.major_minor }}
+            ${{ env.DOCKER_HUB_USER }}/${{ env.IMAGE_NAME }}:latest
+          build-args: |
+            MOODLE_VERSION=${{ steps.version.outputs.moodle_version }}
+            IOMAD_BRANCH=${{ steps.version.outputs.iomad_branch }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          labels: |
+            org.opencontainers.image.title=Moodle + IOMAD
+            org.opencontainers.image.description=Moodle 4.5 LTS with IOMAD multi-tenancy plugin
+            org.opencontainers.image.version=${{ steps.version.outputs.version }}
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+
+      - name: Summary
+        run: |
+          echo "## 🐳 Docker Image Published" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Detail | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|--------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Image | \`${{ env.DOCKER_HUB_USER }}/${{ env.IMAGE_NAME }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| Version | \`${{ steps.version.outputs.version }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| Platforms | \`linux/amd64\`, \`linux/arm64\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| Moodle | \`${{ steps.version.outputs.moodle_version }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| IOMAD | \`${{ steps.version.outputs.iomad_branch }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo '```bash' >> $GITHUB_STEP_SUMMARY
+          echo "docker pull ${{ env.DOCKER_HUB_USER }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY

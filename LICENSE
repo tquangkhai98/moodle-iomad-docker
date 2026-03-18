@@ -1,0 +1,13 @@
+                    GNU GENERAL PUBLIC LICENSE
+                       Version 3, 29 June 2007
+
+ Copyright (C) 2007 Free Software Foundation, Inc. <https://fsf.org/>
+ Everyone is permitted to copy and distribute verbatim copies
+ of this license document, but changing it is not allowed.
+
+This Docker image packages Moodle (GPL-3.0) and IOMAD (GPL-3.0).
+As derivative works of GPL-3.0 software, this project is also
+licensed under the GNU General Public License v3.0.
+
+For the full license text, see:
+https://www.gnu.org/licenses/gpl-3.0.en.html
