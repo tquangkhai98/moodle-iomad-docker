@@ -4,7 +4,7 @@
 [![Docker Image Size](https://img.shields.io/docker/image-size/tquangkhai98/moodle-iomad/latest?logo=docker&label=Image%20Size)](https://hub.docker.com/r/tquangkhai98/moodle-iomad)
 [![GHCR](https://img.shields.io/badge/ghcr.io-moodle--iomad-blue?logo=github)](https://github.com/tquangkhai98/moodle-iomad-docker/pkgs/container/moodle-iomad)
 [![Build](https://github.com/tquangkhai98/moodle-iomad-docker/actions/workflows/build-push.yml/badge.svg)](https://github.com/tquangkhai98/moodle-iomad-docker/actions/workflows/build-push.yml)
-[![License](https://img.shields.io/github/license/tquangkhai98/moodle-iomad-docker?label=License)](LICENSE)
+[![License: GPL-3.0](https://img.shields.io/badge/License-GPL--3.0-blue.svg)](LICENSE)
 
 Pre-built, production-ready Docker images with **Moodle LMS** and **IOMAD** multi-tenancy plugin — available in multiple versions, for `amd64` and `arm64`.
 
